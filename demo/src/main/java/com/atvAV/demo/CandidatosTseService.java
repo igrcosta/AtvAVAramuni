@@ -1,4 +1,4 @@
-package com.atvAV.demo.service;
+package com.atvAV.demo;
 
 import java.io.IOException;
 import java.io.InputStreamReader;

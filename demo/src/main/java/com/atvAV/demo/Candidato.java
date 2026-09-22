@@ -1,4 +1,4 @@
-package com.atvAV.demo.model;
+package com.atvAV.demo;
 
 import java.time.LocalDate;
 import java.time.Period;
