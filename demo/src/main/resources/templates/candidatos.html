@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Candidatos TSE</title>
+    <link rel="stylesheet" href="/css/candidatos.css">
+</head>
+<body>
+<main class="page-shell">
+    <header class="hero">
+        <p class="eyebrow">Eleições 2026 · Minas Gerais</p>
+        <h1>Consulta de candidatos</h1>
+        <p class="intro">Pesquise por nome, número, cargo ou partido.</p>
+    </header>
+
+    <form class="filters" method="get" action="/candidatos">
+        <label class="search-field">
+            <span>Busca</span>
+            <input type="search" name="texto" th:value="${texto}" placeholder="Nome, nome de urna ou número">
+        </label>
+        <label>
+            <span>Cargo</span>
+            <select name="cargo">
+                <option value="">Todos os cargos</option>
+                <option th:each="item : ${cargos}" th:value="${item}" th:text="${item}" th:selected="${item == cargoSelecionado}"></option>
+            </select>
+        </label>
+        <label>
+            <span>Partido</span>
+            <select name="partido">
+                <option value="">Todos os partidos</option>
+                <option th:each="item : ${partidos}" th:value="${item}" th:text="${item}" th:selected="${item == partidoSelecionado}"></option>
+            </select>
+        </label>
+        <button type="submit">Filtrar</button>
+        <a class="clear" href="/candidatos">Limpar</a>
+    </form>
+
+    <section class="results" aria-live="polite">
+        <div class="results-heading">
+            <h2>Resultados</h2>
+            <span th:text="${#lists.size(candidatos)} + ' candidato(s)'">0 candidato(s)</span>
+        </div>
+        <div class="empty" th:if="${#lists.isEmpty(candidatos)}">
+            <strong>Nenhum candidato encontrado.</strong>
+            <p>Confira os filtros ou adicione o CSV em <code>src/main/resources/data/candidatos</code>.</p>
+        </div>
+        <div class="candidate-grid" th:unless="${#lists.isEmpty(candidatos)}">
+            <article class="candidate" th:each="candidato : ${candidatos}">
+                <img th:src="@{'/images/candidatos/' + ${candidato.nomeArquivoFoto}}" th:alt="'Foto de ' + ${candidato.nomeUrna}" onerror="this.style.display='none'">
+                <div class="candidate-content">
+                    <p class="candidate-number" th:text="${candidato.nrCandidato}">00000</p>
+                    <h3 th:text="${candidato.nomeUrna}">Nome de urna</h3>
+                    <p th:text="${candidato.nomeCandidato}">Nome completo</p>
+                    <dl>
+                        <div><dt>Cargo</dt><dd th:text="${candidato.cargo}">Cargo</dd></div>
+                        <div><dt>Partido</dt><dd th:text="${candidato.siglaPartido}">ABC</dd></div>
+                        <div th:if="${candidato.idade >= 0}"><dt>Idade</dt><dd th:text="${candidato.idade} + ' anos'">40 anos</dd></div>
+                    </dl>
+                </div>
+            </article>
+        </div>
+    </section>
+</main>
+</body>
+</html>
